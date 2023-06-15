@@ -1,0 +1,31 @@
+{
+  "name": "verificador_deconexao_2_0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "tailwind": "tailwindcss -i ./src/style.css -o ./dist/style.css --watch",
+    "build": "electron-builder --win"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^25.1.0",
+    "electron-builder": "^24.4.0"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.14",
+    "tailwindcss": "^3.3.2"
+  },
+  "build": {
+    "appId": "com.danilogomes.rec",
+    "win": {
+      "icon": "./dist/assets/globo-terrestre.ico"
+    },
+    "directories": {
+      "output": "Aplication"
+    }
+  }
+}
