@@ -25,7 +25,6 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      preload: path.join(__dirname, "src/back-end/preload.js"),
     },
   });
 
@@ -43,8 +42,7 @@ const createWindow = () => {
   // iniciar a aplicação tinha um delay de alguns ms para carregar a página html,
   // o win.show com o event "ready-to-show" executa somente quando a pagina esta pronta.
 
-  win.once("ready-to-show", () => {
-    // win.show();
+  win.on("ready-to-show", () => {
 
     notifier.notify({
       title: `Network Connection Checker`,
@@ -56,19 +54,25 @@ const createWindow = () => {
   ipcMain.on("checkNetworks", async (event) => {
     const result = await getNetworksConnection();
 
+    let messages = [];
     result.map((i) => {
       const key = Object.keys(i)[0];
-      const value = Object.values(i)[0];
+      const value = Object.values(i);
+
+      const message = `${key} - Offline\n`;
 
       if (value == "Offline") {
-        notifier.notify({
-          title: `A redes que se encontram offline.`,
-          message: `A rede ${key} se encontra offline.`,
-          icon: path.join(__dirname, "dist/assets/globo-terrestre.ico"),
-        });
+        messages.push(message);
       }
     });
+
     event.reply("networks", result);
+
+    notifier.notify({
+      title: `A redes que se encontram Offline.`,
+      message: `${messages.join("")}\n`,
+      icon: path.join(__dirname, "dist/assets/globo-terrestre.ico"),
+    });
   });
 
   ipcMain.on("hideProgram", () => {

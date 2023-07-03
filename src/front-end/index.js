@@ -14,8 +14,10 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
 });
 
+ipcRenderer.send("checkNetworks");
 //faz com que o modal apareça removendo a class hidden dele e colocando a flex, tmb adiciona animação.
 buttonUpdate.addEventListener("click", () => {
+  buttonUpdate.classList.add("disabled:opacity-75");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   imgBox.children[0].classList.add("animate-spin");
@@ -34,6 +36,7 @@ ipcRenderer.on("networks", (e, response) => {
   //Se houver resposta.
   if (response) {
     //esconde o modal e mostra a tabela montada.
+    buttonUpdate.classList.remove("disabled:opacity-75");
     modal.classList.add("hidden");
     imgBox.classList.add("hidden");
     table.classList.remove("hidden");
@@ -125,4 +128,4 @@ function createTableRow(key, value) {
 
 setInterval(() => {
   ipcRenderer.send("checkNetworks");
-}, 20000);
+}, 1800000); // 30 minutos
