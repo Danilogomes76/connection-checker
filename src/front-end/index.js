@@ -9,13 +9,12 @@ const table = document.querySelector("#table");
 const lastUpdate = document.querySelector("#lastUpdate");
 const imgBox = document.querySelector("#imgBox");
 
-//adiciona o evento que ao enviar(submit) ele rode a função de seta, que previne o comportamento padrão do form, que é recarregar a página
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 });
 
 ipcRenderer.send("checkNetworks");
-//faz com que o modal apareça removendo a class hidden dele e colocando a flex, tmb adiciona animação.
+
 buttonUpdate.addEventListener("click", () => {
   buttonUpdate.classList.add("disabled:opacity-75");
   modal.classList.remove("hidden");
@@ -23,7 +22,6 @@ buttonUpdate.addEventListener("click", () => {
   imgBox.children[0].classList.add("animate-spin");
   imgBox.children[1].innerHTML = "Loading...";
 
-  //ENVIA(send) uma mensagem para o back-end, com uma mensagem.
   ipcRenderer.send("checkNetworks");
 });
 
@@ -31,26 +29,21 @@ buttonSecondPlan.addEventListener("click", () => {
   ipcRenderer.send("hideProgram");
 });
 
-//RECEBE(on) uma mensagem do back-end, ao receber a mensagem ele capta a resposta que o back-end enviou.
 ipcRenderer.on("networks", (e, response) => {
-  //Se houver resposta.
   if (response) {
-    //esconde o modal e mostra a tabela montada.
     buttonUpdate.classList.remove("disabled:opacity-75");
     modal.classList.add("hidden");
     imgBox.classList.add("hidden");
     table.classList.remove("hidden");
 
-    //neste caso a response é um array de objetos, ele percorre este array(map), e para cada item ele pega a chave(nome) e valor do objeto
     response.map((i) => {
       const key = Object.keys(i)[0];
       const value = Object.values(i)[0];
 
-      if (tbody.children.length > response.length) {
+      if (tbody.children.length >= response.length) {
         while (tbody.firstChild) {
           tbody.removeChild(tbody.firstChild);
         }
-        createTableRow(key, value);
       }
       createTableRow(key, value);
     });
@@ -128,4 +121,4 @@ function createTableRow(key, value) {
 
 setInterval(() => {
   ipcRenderer.send("checkNetworks");
-}, 1800000); // 30 minutos
+}, 1800000);

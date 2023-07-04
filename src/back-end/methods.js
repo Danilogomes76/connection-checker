@@ -1,4 +1,4 @@
-const enderecos = {
+const address = {
   Google: "www.google.com",
   Facebook: "www.facebook.com",
   Twitter: "www.twitter.com",
@@ -13,9 +13,9 @@ const enderecos = {
 
 const { exec } = require("child_process");
 
-function verifyConnection(endereco) {
+function verifyConnection(adress) {
   return new Promise((resolve, reject) => {
-    exec(`ping ${endereco}`, (error, stdout, stderr) => {
+    exec(`ping ${adress}`, (error, stdout, stderr) => {
       const output = stdout.toString();
       if (output.includes("Host")) {
         resolve(false);
@@ -29,18 +29,18 @@ function verifyConnection(endereco) {
 async function getNetworksConnection(win) {
   let dashboard = [];
 
-  const promessas = Object.entries(enderecos).map(([nome, endereco]) =>
-    verifyConnection(endereco)
+  const promises = Object.entries(address).map(([name, adress]) =>
+    verifyConnection(adress)
   );
-  const resultados = await Promise.all(promessas);
+  const results = await Promise.all(promises);
 
-  Object.entries(enderecos).forEach(([nome, endereco], index) => {
-    const status = resultados[index] ? "Online" : "Offline";
+  Object.entries(address).forEach(([name, adress], index) => {
+    const status = results[index] ? "Online" : "Offline";
 
-    const rede = {
-      [nome]: status,
+    const network = {
+      [name]: status,
     };
-    dashboard.push(rede);
+    dashboard.push(network);
   });
 
   return dashboard;
